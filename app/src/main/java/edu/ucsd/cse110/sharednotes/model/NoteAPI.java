@@ -11,8 +11,11 @@ import com.google.gson.Gson;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class NoteAPI {
     // TODO: Implement the API using OkHttp!
@@ -25,8 +28,45 @@ public class NoteAPI {
 
     private OkHttpClient client;
 
+    public static final MediaType JSON
+            = MediaType.get("application/json; charset=utf-8");
+
     public NoteAPI() {
         this.client = new OkHttpClient();
+    }
+
+    public String getNote(Note note){
+        String string = "https://sharednotes.goto.ucsd.edu/"+ note.title;
+        String url = string.replace(" ", "%20");
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String putNote(Note note){
+        String json = note.toJSON();
+        String string = "https://sharednotes.goto.ucsd.edu/"+ note.title;
+        String url = string.replace(" ", "%20");
+
+        RequestBody body = RequestBody.create(json, JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static NoteAPI provide() {
