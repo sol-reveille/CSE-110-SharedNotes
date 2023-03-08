@@ -36,6 +36,7 @@ public class NoteAPI {
     }
 
     public String getNote(Note note){
+
         String string = "https://sharednotes.goto.ucsd.edu/"+ note.title;
         String url = string.replace(" ", "%20");
 
@@ -49,7 +50,11 @@ public class NoteAPI {
             e.printStackTrace();
             return null;
         }
+
+
+
     }
+
 
     public String putNote(Note note){
         String json = note.toJSON();
