@@ -113,7 +113,7 @@ public class NoteRepository {
 
         var executor = Executors.newSingleThreadScheduledExecutor();
         poller = executor.scheduleAtFixedRate(() -> {
-            String noteString = api.getNote(Note.fromJSON(title));
+            String noteString = api.getNote(title);
             Note noteJSON = Note.fromJSON(noteString);
             noteVersion.postValue(noteJSON);
         }, 0, 3000, TimeUnit.MILLISECONDS);

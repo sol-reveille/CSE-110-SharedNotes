@@ -35,36 +35,52 @@ public class NoteAPI {
         this.client = new OkHttpClient();
     }
 
-    public String getNote(Note note){
 
-        String string = "https://sharednotes.goto.ucsd.edu/"+ note.title;
-        String url = string.replace(" ", "%20");
-
-        Request request = new Request.Builder()
-                .url(url)
+    public String getNote(String title) {
+        title = title.replace(" ", "%20");
+        var request = new Request.Builder()
+                .url("https://sharednotes.goto.ucsd.edu/notes/" + title)
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
+        try (var response = client.newCall(request).execute()) {
+            var body = response.body().string();
+            return body;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
-
-
     }
+//    public String getNote(Note note){
+//
+//        String string = "https://sharednotes.goto.ucsd.edu/notes/"+ note.title;
+//
+//        String url = string.replace(" ", "%20");
+//
+//        Request request = new Request.Builder()
+//                .url(url)
+//                .build();
+//
+//        try (Response response = client.newCall(request).execute()) {
+//            return response.body().string();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//
+//
+//
+//    }
 
 
     public String putNote(Note note){
         String json = note.toJSON();
-        String string = "https://sharednotes.goto.ucsd.edu/"+ note.title;
+        String string = "https://sharednotes.goto.ucsd.edu/notes/"+ note.title;
         String url = string.replace(" ", "%20");
 
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
-                .post(body)
+                .method("PUT", body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
             return response.body().string();
