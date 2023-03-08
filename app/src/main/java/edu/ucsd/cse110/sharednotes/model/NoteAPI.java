@@ -69,6 +69,8 @@ public class NoteAPI {
         }
     }
 
+
+
     public static NoteAPI provide() {
         if (instance == null) {
             instance = new NoteAPI();
